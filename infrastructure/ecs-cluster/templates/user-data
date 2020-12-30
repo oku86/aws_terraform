@@ -1,0 +1,30 @@
+#!/bin/bash
+
+yum update -y
+yum install -y kernel-devel-$(uname -r) epel-release unzip aws-cli jq
+
+# Configure the cluster agent to join the cluster
+echo "ECS_CLUSTER=${cluster_name}" >  /etc/ecs/ecs.config
+echo "ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=1h" >>  /etc/ecs/ecs.config
+
+# Install SSM agent for Remote SSH Access
+yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+
+# Disable rate limiting
+cat > /etc/rsyslog.d/disable_rate_limiting.conf <<- EOF
+\$SystemLogRateLimitInterval 0
+\$SystemLogRateLimitBurst 0
+\$ImjournalRateLimitInterval 0
+\$ImjournalRatelimitBurst 0
+EOF
+
+# Disable Journald rate limiting
+sed -i '/RateLimitInterval/c\RateLimitInterval=0' /etc/systemd/journald.conf
+sed -i '/RateLimitBurst/c\RateLimitBurst=0' /etc/systemd/journald.conf
+sed -i '/Storage/c\Storage=persistent' /etc/systemd/journald.conf
+systemctl restart systemd-journald
+
+# Change the host name for the OS logs, so it doesn't show the default ip
+sed -i '1i\$LocalHostName ${cluster_name}' /etc/rsyslog.conf
+
+service rsyslog restart

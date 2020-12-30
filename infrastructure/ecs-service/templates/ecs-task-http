@@ -1,0 +1,30 @@
+[
+    {
+      "name": "${ops_service}",
+      "memory": 512,
+      "memoryReservation": 256,
+      "cpu": 200,
+      "image": "${aws_account}.dkr.ecr.eu-west-1.amazonaws.com/${ecr_repo}:${ops_environment}",
+      "entryPoint": null,
+      "command": null,
+      "environment": null,
+      "logConfiguration": {
+        "logDriver": "syslog",
+        "options": {
+          "tag": "${container_name}"
+        }
+      },
+      "portMappings": [{
+        "hostPort": ${host_port},
+        "containerPort": ${container_port},
+        "protocol": "tcp"
+      }],
+      "placementStrategy": [
+        {
+            "field": "instanceId",
+            "type": "spread"
+        }
+      ],
+      "essential": true
+    }
+]
