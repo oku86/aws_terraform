@@ -158,6 +158,6 @@ Using AWS S3 to serve all static content and/or [CloudFront](https://aws.amazon.
 
 ## Monitoring & Alerting
 
-The Terraform code provides CloudWatch Alarms for ECS cluster CPU and Memory reservation levels and ECS service memory and CPU utilisation. These alarms can trigger auto-scaling of the cluster and service respectively and also send SNS notifications to alert the relevant team(s).
+Terraform provides CloudWatch Alarms for ECS cluster (CPU and Memory reservation levels) and ECS service (memory and CPU utilisation). These alarms can trigger auto-scaling of the cluster and/or service respectively, as well as sending SNS notifications to alert relevant team(s).
 
 Additionally application uptime and performance monitoring (APM) are recommended.  
