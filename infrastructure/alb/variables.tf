@@ -4,6 +4,11 @@ variable "aws_region" {
   default     = "eu-west-1"
 }
 
+variable "dns_domain_name" {
+  description = "Route53 domain name to be created"
+  default     = "check.co"
+}
+
 variable "internal" {
   description = "If set to true, this will be an internal LB, accessible only within the VPC. The main reason to use an LB with Vault is to make it publicly accessible, so this should typically be set to false."
   default     = false

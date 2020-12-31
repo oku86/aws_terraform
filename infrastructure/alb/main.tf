@@ -3,10 +3,10 @@
 # -----------------------------------------------------------------------------
 
 resource "aws_route53_zone" "check_co" {
-  name = "check.co"
+  name = var.dns_domain_name
 
   tags = {
-    Name              = "check.co"
+    Name              = var.dns_domain_name
     ops_terraformed   = var.ops_terraformed
     ops_environment   = data.template_file.environment.rendered
   }
@@ -17,11 +17,11 @@ resource "aws_route53_zone" "check_co" {
 # -----------------------------------------------------------------------------
 
 resource "aws_acm_certificate" "check_ssl_cert" {
-  domain_name       = "*.check.co"
+  domain_name       = "*.${var.dns_domain_name}"
   validation_method = "DNS"
 
   tags = {
-    Name              = "check.co"
+    Name              = var.dns_domain_name
     ops_terraformed   = var.ops_terraformed
     ops_environment   = data.template_file.environment.rendered
   }

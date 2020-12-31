@@ -103,7 +103,7 @@ resource "aws_appautoscaling_target" "ecs_target" {
 
 # Scale UP if CPU usage > 81%
 resource "aws_appautoscaling_policy" "ecs_autoscaling_up" {
-  name               = "scale-ip"
+  name               = "scale-up"
   policy_type        = "StepScaling"
   resource_id        = aws_appautoscaling_target.ecs_target.resource_id
   scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
@@ -112,7 +112,7 @@ resource "aws_appautoscaling_policy" "ecs_autoscaling_up" {
   step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
     cooldown                = 300
-    metric_aggregation_type = "Maximum"
+    metric_aggregation_type = "Average"
 
     step_adjustment {
       metric_interval_lower_bound = 1
@@ -132,7 +132,7 @@ resource "aws_appautoscaling_policy" "ecs_autoscaling_down" {
   step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
     cooldown                = 300
-    metric_aggregation_type = "Maximum"
+    metric_aggregation_type = "Average"
 
     step_adjustment {
       metric_interval_upper_bound = -20

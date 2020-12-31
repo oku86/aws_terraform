@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 
 resource "aws_iam_role" "ecs_instance_role" {
-  name               = "${data.template_file.environment.rendered}--ecs-instances"
+  name               = "${data.template_file.environment.rendered}-ecs-instances"
   assume_role_policy = data.template_file.ecs_instance_policy.rendered
 }
 
@@ -12,7 +12,7 @@ resource "aws_iam_role" "ecs_instance_role" {
 # -----------------------------------------------------------------------------
 
 resource "aws_iam_policy" "ecs_cluster_policy" {
-  name        = "${data.template_file.environment.rendered}--ecs-cluster-policy"
+  name        = "${data.template_file.environment.rendered}-ecs-cluster-policy"
   path        = "/${data.template_file.environment.rendered}/"
   description = "Permissions for ECS instances "
 
@@ -99,7 +99,7 @@ resource "aws_launch_configuration" "launch_configuration" {
 
 # Autoscaling group for the the instance
 resource "aws_autoscaling_group" "autoscaling_group" {
-  name                 = "${data.template_file.environment.rendered}-ecs"
+  name                 = "${data.template_file.environment.rendered}-ecs-cluster-01"
   vpc_zone_identifier  = tolist(data.terraform_remote_state.network.outputs.private_subnets)
   min_size             = var.asg_min_size
   max_size             = var.asg_max_size
@@ -110,7 +110,7 @@ resource "aws_autoscaling_group" "autoscaling_group" {
 
   tag {
     key                 = "Name"
-    value               = "${data.template_file.environment.rendered}-ecs"
+    value               = "${data.template_file.environment.rendered}-ecs-cluster-01"
     propagate_at_launch = "true"
   }
 
